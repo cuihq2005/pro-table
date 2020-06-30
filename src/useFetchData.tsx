@@ -21,6 +21,7 @@ export interface UseFetchDataAction<T extends RequestData<any>> {
   resetPageIndex: () => void;
   reset: () => void;
   setPageInfo: (pageInfo: Partial<PageInfo>) => void;
+  setDataSource: (dataSource: T['data']) => void;
 }
 
 interface PageInfo {
@@ -186,6 +187,9 @@ const useFetchData = <T extends RequestData<any>>(
         ...pageInfo,
         ...info,
       }),
+    setDataSource: (dataSource: T['data']) => {
+      setList(dataSource);
+    },
   };
 };
 

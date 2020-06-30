@@ -757,14 +757,14 @@ const ProTable = <T extends {}, U extends object>(
           return;
         }
 
-        setDataSource([data, ...(current.dataSource as T[])]);
+        current.setDataSource([data, ...(current.dataSource as T[])]);
 
-        current.setPageInfo({
-          page: current.current,
-          pageSize: current.pageSize,
-          hasMore: current.hasMore,
-          total: current.total + 1,
-        });
+        // current.setPageInfo({
+        //   page: current.current,
+        //   pageSize: current.pageSize,
+        //   hasMore: current.hasMore,
+        //   total: current.total + 1,
+        // });
       },
       update: (data: T) => {
         const {
@@ -776,7 +776,7 @@ const ProTable = <T extends {}, U extends object>(
         }
         const getKey = rest.rowKey;
         if (getKey && typeof getKey === 'function') {
-          setDataSource(
+          current.setDataSource(
             (current.dataSource as T[]).map((item) =>
               getKey(item) === getKey(data) ? data : item,
             ),
@@ -800,7 +800,7 @@ const ProTable = <T extends {}, U extends object>(
             // 没有删除数据
             return;
           }
-          setDataSource(newList);
+          current.setDataSource(newList);
 
           current.setPageInfo({
             page: current.current,
