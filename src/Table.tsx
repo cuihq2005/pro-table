@@ -314,11 +314,6 @@ export interface ProTableProps<T, U extends { [key: string]: any }>
    * 空值时显示
    */
   columnEmptyText?: ColumnEmptyText;
-
-  /**
-   * 获取主键，用于修改、删除DataSource中的数据
-   */
-  getKey?: (data: T) => any;
 }
 
 const mergePagination = <T extends any[], U>(
@@ -585,8 +580,6 @@ const ProTable = <T extends {}, U extends object>(
     type = 'table',
     onReset = () => {},
     columnEmptyText = '-',
-    // eslint-disable-next-line @typescript-eslint/dot-notation
-    getKey = (data: T) => data['id'] || data,
     ...rest
   } = props;
 
@@ -781,10 +774,14 @@ const ProTable = <T extends {}, U extends object>(
         if (!current) {
           return;
         }
-
-        setDataSource(
-          (current.dataSource as T[]).map((item) => (getKey(item) === getKey(data) ? data : item)),
-        );
+        const getKey = rest.rowKey;
+        if (getKey && typeof getKey === 'function') {
+          setDataSource(
+            (current.dataSource as T[]).map((item) =>
+              getKey(item) === getKey(data) ? data : item,
+            ),
+          );
+        }
       },
       remove: (data: T) => {
         const {
@@ -794,20 +791,24 @@ const ProTable = <T extends {}, U extends object>(
         if (!current) {
           return;
         }
+        const getKey = rest.rowKey;
+        if (getKey && typeof getKey === 'function') {
+          const newList = (current.dataSource as T[]).filter(
+            (item) => getKey(item) !== getKey(data),
+          );
+          if (newList.length === (current.dataSource as T[]).length) {
+            // 没有删除数据
+            return;
+          }
+          setDataSource(newList);
 
-        const newList = (current.dataSource as T[]).filter((item) => getKey(item) !== getKey(data));
-        if (newList.length === (current.dataSource as T[]).length) {
-          // 没有删除数据
-          return;
+          current.setPageInfo({
+            page: current.current,
+            pageSize: current.pageSize,
+            hasMore: current.hasMore,
+            total: current.total - 1,
+          });
         }
-        setDataSource(newList);
-
-        current.setPageInfo({
-          page: current.current,
-          pageSize: current.pageSize,
-          hasMore: current.hasMore,
-          total: current.total - 1,
-        });
       },
     };
     if (actionRef && typeof actionRef === 'function') {
