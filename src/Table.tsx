@@ -724,6 +724,7 @@ const ProTable = <T extends {}, U extends object>(
         const {
           action: { current },
         } = counter;
+
         if (!current) {
           return;
         }
@@ -737,6 +738,7 @@ const ProTable = <T extends {}, U extends object>(
         const {
           action: { current },
         } = counter;
+
         if (!current) {
           return;
         }
@@ -746,6 +748,7 @@ const ProTable = <T extends {}, U extends object>(
         const {
           action: { current },
         } = counter;
+
         if (!current) {
           return;
         }
@@ -753,13 +756,16 @@ const ProTable = <T extends {}, U extends object>(
       },
       clearSelected: () => onCleanSelected(),
       add: (data: T) => {
-        setDataSource([data, ...dataSource]);
         const {
           action: { current },
         } = counter;
+
         if (!current) {
           return;
         }
+
+        setDataSource([data, ...(current.dataSource as T[])]);
+
         current.setPageInfo({
           page: current.current,
           pageSize: current.pageSize,
@@ -768,23 +774,34 @@ const ProTable = <T extends {}, U extends object>(
         });
       },
       update: (data: T) => {
-        setDataSource({
-          ...dataSource.map((item) => (getKey(item) === getKey(data) ? data : item)),
-        });
+        const {
+          action: { current },
+        } = counter;
+
+        if (!current) {
+          return;
+        }
+
+        setDataSource(
+          (current.dataSource as T[]).map((item) => (getKey(item) === getKey(data) ? data : item)),
+        );
       },
       remove: (data: T) => {
-        const newList = dataSource.filter((item) => getKey(item) !== getKey(data));
-        if (newList.length === dataSource.length) {
+        const {
+          action: { current },
+        } = counter;
+
+        if (!current) {
+          return;
+        }
+
+        const newList = (current.dataSource as T[]).filter((item) => getKey(item) !== getKey(data));
+        if (newList.length === (current.dataSource as T[]).length) {
           // 没有删除数据
           return;
         }
         setDataSource({ ...newList });
-        const {
-          action: { current },
-        } = counter;
-        if (!current) {
-          return;
-        }
+
         current.setPageInfo({
           page: current.current,
           pageSize: current.pageSize,
