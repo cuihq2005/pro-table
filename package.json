@@ -1,8 +1,11 @@
 {
-  "name": "@ant-design/pro-table",
+  "name": "@baiyuxx/pro-table",
   "version": "2.4.2",
   "description": "🏆 Use Ant Design Table like a Pro!",
-  "repository": "https://github.com/ant-design/pro-table",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ant-design/pro-table.git"
+  },
   "license": "MIT",
   "main": "lib/index.js",
   "module": "es/index.js",
@@ -96,5 +99,15 @@
   "authors": {
     "name": "chenshuai2144",
     "email": "qixian.cs@outlook.com"
-  }
+  },
+  "bugs": {
+    "url": "https://github.com/ant-design/pro-table/issues"
+  },
+  "homepage": "https://github.com/ant-design/pro-table#readme",
+  "directories": {
+    "doc": "docs",
+    "lib": "lib",
+    "test": "tests"
+  },
+  "author": "cuihq"
 }
