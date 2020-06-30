@@ -318,7 +318,7 @@ export interface ProTableProps<T, U extends { [key: string]: any }>
   /**
    * 获取主键，用于修改、删除DataSource中的数据
    */
-  getKey: (data: T) => any;
+  getKey?: (data: T) => any;
 }
 
 const mergePagination = <T extends any[], U>(
@@ -585,7 +585,8 @@ const ProTable = <T extends {}, U extends object>(
     type = 'table',
     onReset = () => {},
     columnEmptyText = '-',
-    getKey,
+    // eslint-disable-next-line @typescript-eslint/dot-notation
+    getKey = (data: T) => data['id'] || data,
     ...rest
   } = props;
 
