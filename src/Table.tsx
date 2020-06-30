@@ -800,7 +800,7 @@ const ProTable = <T extends {}, U extends object>(
           // 没有删除数据
           return;
         }
-        setDataSource({ ...newList });
+        setDataSource(newList);
 
         current.setPageInfo({
           page: current.current,
