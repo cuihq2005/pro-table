@@ -43,6 +43,9 @@ export interface ActionType {
   fetchMore: () => void;
   reset: () => void;
   clearSelected: () => void;
+  add: (data: any) => void;
+  update: (data: any) => void;
+  remove: (data: any) => void;
 }
 
 export interface ColumnsState {
@@ -311,6 +314,11 @@ export interface ProTableProps<T, U extends { [key: string]: any }>
    * 空值时显示
    */
   columnEmptyText?: ColumnEmptyText;
+
+  /**
+   * 获取主键，用于修改、删除DataSource中的数据
+   */
+  getKey: (data: T) => any;
 }
 
 const mergePagination = <T extends any[], U>(
@@ -577,6 +585,7 @@ const ProTable = <T extends {}, U extends object>(
     type = 'table',
     onReset = () => {},
     columnEmptyText = '-',
+    getKey,
     ...rest
   } = props;
 
@@ -742,6 +751,46 @@ const ProTable = <T extends {}, U extends object>(
         current.reset();
       },
       clearSelected: () => onCleanSelected(),
+      add: (data: T) => {
+        setDataSource([data, ...dataSource]);
+        const {
+          action: { current },
+        } = counter;
+        if (!current) {
+          return;
+        }
+        current.setPageInfo({
+          page: current.current,
+          pageSize: current.pageSize,
+          hasMore: current.hasMore,
+          total: current.total + 1,
+        });
+      },
+      update: (data: T) => {
+        setDataSource({
+          ...dataSource.map((item) => (getKey(item) === getKey(data) ? data : item)),
+        });
+      },
+      remove: (data: T) => {
+        const newList = dataSource.filter((item) => getKey(item) !== getKey(data));
+        if (newList.length === dataSource.length) {
+          // 没有删除数据
+          return;
+        }
+        setDataSource({ ...newList });
+        const {
+          action: { current },
+        } = counter;
+        if (!current) {
+          return;
+        }
+        current.setPageInfo({
+          page: current.current,
+          pageSize: current.pageSize,
+          hasMore: current.hasMore,
+          total: current.total - 1,
+        });
+      },
     };
     if (actionRef && typeof actionRef === 'function') {
       actionRef(userAction);
