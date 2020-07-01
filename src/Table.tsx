@@ -759,12 +759,12 @@ const ProTable = <T extends {}, U extends object>(
 
         current.setDataSource([data, ...(current.dataSource as T[])]);
 
-        // current.setPageInfo({
-        //   page: current.current,
-        //   pageSize: current.pageSize,
-        //   hasMore: current.hasMore,
-        //   total: current.total + 1,
-        // });
+        current.setPageInfo({
+          page: current.current,
+          pageSize: current.pageSize,
+          hasMore: current.hasMore,
+          total: current.total + 1,
+        });
       },
       update: (data: T) => {
         const {
