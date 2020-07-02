@@ -188,7 +188,11 @@ const useFetchData = <T extends RequestData<any>>(
         ...info,
       }),
     setDataSource: (dataSource: T['data']) => {
-      setList(dataSource);
+      if (dataSource.length > pageInfo.pageSize) {
+        setList(dataSource.slice(0, pageInfo.pageSize));
+      } else {
+        setList(dataSource);
+      }
     },
   };
 };

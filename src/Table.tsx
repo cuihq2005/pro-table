@@ -785,7 +785,7 @@ const ProTable = <T extends {}, U extends object>(
           );
         }
       },
-      remove: (data: T) => {
+      remove: async (data: T) => {
         const {
           action: { current },
         } = counter;
@@ -802,14 +802,20 @@ const ProTable = <T extends {}, U extends object>(
             // 没有删除数据
             return;
           }
-          current.setDataSource(newList);
 
-          current.setPageInfo({
-            page: current.current,
-            pageSize: current.pageSize,
-            hasMore: current.hasMore,
-            total: current.total - 1,
-          });
+          if (newList.length === 0 && current.total > 1) {
+            // 本页面被删空了，但还有数据，那重新加载一下
+            await current.reload();
+          } else {
+            current.setDataSource(newList);
+
+            current.setPageInfo({
+              page: current.current,
+              pageSize: current.pageSize,
+              hasMore: current.hasMore,
+              total: current.total - 1,
+            });
+          }
         }
       },
     };
