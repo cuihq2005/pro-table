@@ -166,7 +166,7 @@ const useFetchData = <T extends RequestData<any>>(
   return {
     dataSource: list,
     loading,
-    reload: async () => fetchListDebounce.run(),
+    reload: async () => fetchList(),
     fetchMore,
     total: pageInfo.total,
     hasMore: pageInfo.hasMore,
