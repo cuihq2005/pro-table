@@ -159,6 +159,8 @@ export interface ProColumnType<T = unknown>
    * form 的排序
    */
   order?: number;
+
+  searchLabel?: string;
 }
 
 export interface ProColumnGroupType<RecordType> extends ProColumnType<RecordType> {

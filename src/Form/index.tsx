@@ -373,6 +373,7 @@ export const proFormItemRender: (props: {
     ellipsis,
     formItemProps,
     index,
+    searchLabel,
     ...rest
   } = item;
   const key = genColumnKey(rest.key, dataIndex, index);
@@ -392,7 +393,7 @@ export const proFormItemRender: (props: {
     <Col {...colConfig} key={key}>
       <Form.Item
         labelAlign="right"
-        label={getTitle()}
+        label={searchLabel && getTitle()}
         name={Array.isArray(dataIndex) ? dataIndex : key}
         {...(isForm && rest)}
       >
