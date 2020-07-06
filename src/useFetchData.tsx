@@ -127,6 +127,7 @@ const useFetchData = <T extends RequestData<any>>(
     // 在第一页大于 10
     // 第二页也应该是大于 10
     if (page !== undefined && list.length <= pageSize) {
+      console.log('fetch for pageInfo.page');
       fetchListDebounce.run();
       return () => fetchListDebounce.cancel();
     }
@@ -138,6 +139,7 @@ const useFetchData = <T extends RequestData<any>>(
     if (!prePageSize) {
       return () => undefined;
     }
+    console.log('fetch for pageInfo.pageSize');
     /**
      * 切换页面的时候清空一下数据，不然会造成判断失误。
      * 会认为是本地分页而不是服务器分页从而不请求数据
@@ -156,6 +158,7 @@ const useFetchData = <T extends RequestData<any>>(
   };
 
   useEffect(() => {
+    console.log('fetch for effects');
     fetchListDebounce.run();
     return () => {
       fetchListDebounce.cancel();
