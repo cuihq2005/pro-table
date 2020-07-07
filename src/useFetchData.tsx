@@ -40,6 +40,7 @@ const useFetchData = <T extends RequestData<any>>(
     effects?: any[];
     onLoad?: (dataSource: T['data']) => void;
     onRequestError?: (e: Error) => void;
+    autoFetch?: boolean; // 是否自动加载数据
   },
 ): UseFetchDataAction<T> => {
   let isMount = true;
@@ -48,6 +49,7 @@ const useFetchData = <T extends RequestData<any>>(
     defaultCurrent = 1,
     onLoad = () => null,
     onRequestError = () => null,
+    autoFetch = true, // 默认自动加载数据
   } = options || {};
 
   const [list, setList] = useState<T['data']>(defaultData as any);
@@ -127,7 +129,6 @@ const useFetchData = <T extends RequestData<any>>(
     // 在第一页大于 10
     // 第二页也应该是大于 10
     if (page !== undefined && list.length <= pageSize) {
-      console.log('fetch for pageInfo.page');
       fetchListDebounce.run();
       return () => fetchListDebounce.cancel();
     }
@@ -139,7 +140,6 @@ const useFetchData = <T extends RequestData<any>>(
     if (!prePageSize) {
       return () => undefined;
     }
-    console.log('fetch for pageInfo.pageSize');
     /**
      * 切换页面的时候清空一下数据，不然会造成判断失误。
      * 会认为是本地分页而不是服务器分页从而不请求数据
@@ -158,7 +158,11 @@ const useFetchData = <T extends RequestData<any>>(
   };
 
   useEffect(() => {
-    console.log('fetch for effects');
+    // 首次加载(!prePageSize) 且autoFetch为fasle时，直接返回，不进行数据加载
+    if (!prePageSize && !autoFetch) {
+      return () => undefined;
+    }
+
     fetchListDebounce.run();
     return () => {
       fetchListDebounce.cancel();
