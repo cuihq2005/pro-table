@@ -160,7 +160,15 @@ export interface ProColumnType<T = unknown>
    */
   order?: number;
 
+  /**
+   * 用于定义formItem的label
+   */
   searchLabel?: string;
+
+  /**
+   * 搜索表单FormItem的属性，可用于定义rules等FormItem属性
+   */
+  searchFormItemProps?: any;
 }
 
 export interface ProColumnGroupType<RecordType> extends ProColumnType<RecordType> {
@@ -316,6 +324,11 @@ export interface ProTableProps<T, U extends { [key: string]: any }>
    * 空值时显示
    */
   columnEmptyText?: ColumnEmptyText;
+
+  /**
+   * 表单是否自动加载
+   */
+  autoFetch?: boolean;
 }
 
 const mergePagination = <T extends any[], U>(
@@ -582,6 +595,7 @@ const ProTable = <T extends {}, U extends object>(
     type = 'table',
     onReset = () => {},
     columnEmptyText = '-',
+    autoFetch = true,
     ...rest
   } = props;
 
@@ -641,6 +655,7 @@ const ProTable = <T extends {}, U extends object>(
       onLoad,
       onRequestError,
       effects: [stringify(params), stringify(formSearch), stringify(proFilter), stringify(proSort)],
+      autoFetch,
     },
   );
 

@@ -374,6 +374,7 @@ export const proFormItemRender: (props: {
     formItemProps,
     index,
     searchLabel,
+    searchFormItemProps = {},
     ...rest
   } = item;
   const key = genColumnKey(rest.key, dataIndex, index);
@@ -396,6 +397,7 @@ export const proFormItemRender: (props: {
         label={searchLabel && getTitle()}
         name={Array.isArray(dataIndex) ? dataIndex : key}
         {...(isForm && rest)}
+        {...searchFormItemProps}
       >
         {dom}
       </Form.Item>
