@@ -371,17 +371,13 @@ export const proFormItemRender: (props: {
     order,
     initialValue,
     ellipsis,
-    formItemProps,
+    formItemProps = {},
     index,
-    searchLabel,
+    searchLabel = false,
     searchFormItemProps = {},
     ...rest
   } = item;
   const key = genColumnKey(rest.key, dataIndex, index);
-  const dom = <FormInputRender item={item} type={type} intl={intl} form={formInstance} />;
-  if (!dom) {
-    return null;
-  }
 
   // 支持 function 的 title
   const getTitle = () => {
@@ -390,6 +386,17 @@ export const proFormItemRender: (props: {
     }
     return rest.title;
   };
+
+  // 当searchLabel=false时，使用title做为formItem的placeHolder
+  const newItem = !searchLabel
+    ? { ...item, formItemProps: { placeholder: getTitle(), ...formItemProps } }
+    : item;
+
+  const dom = <FormInputRender item={newItem} type={type} intl={intl} form={formInstance} />;
+  if (!dom) {
+    return null;
+  }
+
   return (
     <Col {...colConfig} key={key}>
       <Form.Item
