@@ -160,7 +160,9 @@ const useFetchData = <T extends RequestData<any>>(
   useEffect(() => {
     // 首次加载(!prePageSize) 且autoFetch为fasle时，直接返回，不进行数据加载
     if (!prePageSize && !autoFetch) {
-      return () => undefined;
+      return () => {
+        isMount = false;
+      };
     }
 
     fetchListDebounce.run();
