@@ -157,10 +157,13 @@ const useFetchData = <T extends RequestData<any>>(
     setPageInfo({ ...pageInfo, page: 1 });
   };
 
+  const setLisDebounce = useDebounceFn(() => setList([]), [], 200); // 强制刷新DataSource，用于刷新formsearch
   useEffect(() => {
     // 首次加载(!prePageSize) 且autoFetch为fasle时，直接返回，不进行数据加载
     if (!prePageSize && !autoFetch) {
+      setLisDebounce.run();
       return () => {
+        setLisDebounce.cancel();
         isMount = false;
       };
     }
