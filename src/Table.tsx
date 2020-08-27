@@ -361,7 +361,7 @@ const mergePagination = <T extends any[], U>(
         action.setPageInfo({ pageSize, page });
       } else {
         if (newPageSize !== pageSize) {
-          action.setPageInfo({ pageSize });
+          action.setPageInfo({ pageSize: newPageSize });
         }
         if (current !== page) {
           action.setPageInfo({ page });
